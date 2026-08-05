@@ -5,6 +5,7 @@ import com.umb.taller.domain.Book;
 import com.umb.taller.domain.Library;
 import com.umb.taller.domain.Loan;
 import com.umb.taller.domain.Member;
+import com.umb.taller.exception.AppException;
 import com.umb.taller.service.LibraryService;
 import com.umb.taller.validation.ValidationExample;
 import com.umb.taller.validation.Validator;
@@ -38,6 +39,9 @@ public class Main {
 
             LibraryService service = new LibraryService(library);
 
+            Validator<String> emailValidator = value -> value != null && value.contains("@");
+            System.out.println("✅ Validación de email: " + emailValidator.validate(member.getEmail()));
+
             System.out.println("📚 Biblioteca: " + library.getName());
             System.out.println("📖 Libros disponibles: " + library.getAvailableBooks().size());
             System.out.println("👤 Miembros registrados: " + library.getMembers().size());
@@ -63,9 +67,12 @@ public class Main {
             System.out.println("\n📊 Préstamos vencidos: " + library.getOverdueLoans().size());
             System.out.println("🎯 Sistema funcionando correctamente!");
 
+            service.loanBook("0000000000000", member.getMemberId());
+
+        } catch (AppException e) {
+            System.err.println("❌ Error de dominio: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Error inesperado: " + e.getMessage());
         }
     }
 }

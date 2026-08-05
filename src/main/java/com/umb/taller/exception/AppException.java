@@ -1,24 +1,23 @@
 package com.umb.taller.exception;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AppException extends RuntimeException {
-    private static final Logger LOGGER = Logger.getLogger(AppException.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppException.class);
 
     private final String errorCode;
 
     protected AppException(String message, String errorCode) {
         super(message);
         this.errorCode = errorCode;
-        LOGGER.log(Level.SEVERE, "[{0}] {1}", new Object[]{errorCode, message});
+        LOGGER.error("[{}] {}", errorCode, message);
     }
 
     protected AppException(String message, String errorCode, Throwable cause) {
         super(message, cause);
         this.errorCode = errorCode;
-        LOGGER.log(Level.SEVERE, "[{0}] {1}", new Object[]{errorCode, message});
-        LOGGER.log(Level.SEVERE, "Cause: ", cause);
+        LOGGER.error("[{}] {}", errorCode, message, cause);
     }
 
     public String getErrorCode() {
