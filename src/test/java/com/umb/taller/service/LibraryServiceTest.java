@@ -12,8 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("LibraryService Tests")
 class LibraryServiceTest {
@@ -39,33 +38,33 @@ class LibraryServiceTest {
     @Test
     @DisplayName("should throw EntityNotFoundException when the book does not exist")
     void shouldThrowEntityNotFoundExceptionWhenBookDoesNotExist() {
-        assertThatThrownBy(() -> libraryService.loanBook("0000000000000", member.getMemberId()))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Book not found");
+        Exception ex = assertThrows(EntityNotFoundException.class,
+            () -> libraryService.loanBook("0000000000000", member.getMemberId()));
+        assertTrue(ex.getMessage().contains("Book not found"));
     }
 
     @Test
     @DisplayName("should throw EntityNotFoundException when the member does not exist")
     void shouldThrowEntityNotFoundExceptionWhenMemberDoesNotExist() {
-        assertThatThrownBy(() -> libraryService.loanBook(book.getIsbn(), "M-999"))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Member not found");
+        Exception ex = assertThrows(EntityNotFoundException.class,
+            () -> libraryService.loanBook(book.getIsbn(), "M-999"));
+        assertTrue(ex.getMessage().contains("Member not found"));
     }
 
     @Test
     @DisplayName("should throw ValidationException when book id is blank")
     void shouldThrowValidationExceptionWhenBookIdIsBlank() {
-        assertThatThrownBy(() -> libraryService.loanBook("   ", member.getMemberId()))
-                .isInstanceOf(ValidationException.class)
-                .hasMessageContaining("Book id is required");
+        Exception ex = assertThrows(ValidationException.class,
+            () -> libraryService.loanBook("   ", member.getMemberId()));
+        assertTrue(ex.getMessage().contains("Book id is required"));
     }
 
     @Test
     @DisplayName("should throw ValidationException when member id is blank")
     void shouldThrowValidationExceptionWhenMemberIdIsBlank() {
-        assertThatThrownBy(() -> libraryService.loanBook(book.getIsbn(), "   "))
-                .isInstanceOf(ValidationException.class)
-                .hasMessageContaining("Member id is required");
+        Exception ex = assertThrows(ValidationException.class,
+            () -> libraryService.loanBook(book.getIsbn(), "   "));
+        assertTrue(ex.getMessage().contains("Member id is required"));
     }
 
     @Test
@@ -73,29 +72,28 @@ class LibraryServiceTest {
     void shouldThrowBusinessRuleExceptionWhenBookIsNotAvailable() {
         book.setAvailable(false);
 
-        assertThatThrownBy(() -> libraryService.loanBook(book.getIsbn(), member.getMemberId()))
-                .isInstanceOf(BusinessRuleException.class)
-                .hasMessageContaining("Book is not available");
+        Exception ex = assertThrows(BusinessRuleException.class,
+            () -> libraryService.loanBook(book.getIsbn(), member.getMemberId()));
+        assertTrue(ex.getMessage().contains("Book is not available"));
     }
 
     @Test
     @DisplayName("should loan a book successfully when the book exists")
     void shouldLoanBookSuccessfullyWhenBookExists() {
         Loan loan = libraryService.loanBook(book.getIsbn(), member.getMemberId());
-
-        assertThat(loan).isNotNull();
-        assertThat(loan.getBook()).isEqualTo(book);
-        assertThat(loan.getMember()).isEqualTo(member);
-        assertThat(library.getLoans()).hasSize(1);
-        assertThat(member.getBorrowedBooks()).contains(book);
-        assertThat(book.isAvailable()).isFalse();
+        assertNotNull(loan);
+        assertEquals(book, loan.getBook());
+        assertEquals(member, loan.getMember());
+        assertEquals(1, library.getLoans().size());
+        assertTrue(member.getBorrowedBooks().contains(book));
+        assertFalse(book.isAvailable());
     }
 
     @Test
     @DisplayName("should throw EntityNotFoundException when the book does not exist")
     void shouldThrowEntityNotFoundExceptionWhenBookDoesNotExistForLoaning() {
-        assertThatThrownBy(() -> libraryService.loanBook("9789999999999", member.getMemberId()))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("Book not found");
+        Exception ex = assertThrows(EntityNotFoundException.class,
+            () -> libraryService.loanBook("9789999999999", member.getMemberId()));
+        assertTrue(ex.getMessage().contains("Book not found"));
     }
 }

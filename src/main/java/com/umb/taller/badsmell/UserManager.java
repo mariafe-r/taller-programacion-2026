@@ -28,9 +28,9 @@ public class UserManager {
     }
 
     public boolean deleteUser(String id) {
-        boolean deleted = userService.deleteUser(id);
+        userService.deleteUser(id);
         auditService.logActivity("deleteUser");
-        return deleted;
+        return true;
     }
 
     public User findUser(String id) {

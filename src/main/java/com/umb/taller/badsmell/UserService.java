@@ -69,9 +69,9 @@ public class UserService {
         return existingUser;
     }
 
-    public boolean deleteUser(String id) {
+    public void deleteUser(String id) {
         validateId(id);
-        return userRepository.delete(id);
+        userRepository.deleteById(id);
     }
 
     private void validateName(String name) {

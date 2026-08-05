@@ -94,6 +94,7 @@ public class Library {
             throw new IllegalArgumentException("Loan is not registered in the library");
         }
 
+        loan.getMember().returnBook(loan.getBook());
         loan.returnItem();
     }
 
