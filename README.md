@@ -46,3 +46,46 @@ The project follows the Maven Standard Directory Layout to ensure consistency, m
 | **I - ISP** | Repository interface has focused, specific methods |
 | **D - DIP** | Services depend on Repository interfaces, not concrete implementations |
 
+### User Interfaces
+
+The domain and service layers (`domain`, `exception`, `service`) are shared by three
+presentation layers, none of which contain business logic of their own:
+
+| Layer | Class | Description |
+|-------|-------|--------------|
+| Fixed console demo | `com.umb.taller.Main` | Scripted end-to-end walkthrough (loan + return) used for the lab evidence |
+| **Interactive console menu** | `com.umb.taller.console.ConsoleMenu` | Text menu (list/add books, register members, loan/return, view overdue loans) |
+| **Graphical interface (Swing)** | `com.umb.taller.gui.LibraryGUI` | Desktop window with tabs for Books, Members and Loans (tables + forms) |
+
+### How to Build and Run
+
+**Option 1 — With Gradle (recommended, requires internet the first time to download JUnit 5 / AssertJ).**
+This repo does not ship a Gradle wrapper; use a local Gradle 8.x+ installation, or generate
+one with `gradle wrapper` if you prefer `./gradlew`:
+
+```bash
+gradle run           # Executes com.umb.taller.Main (fixed demo)
+gradle runConsole     # Executes the interactive console menu (ConsoleMenu)
+gradle runGui         # Executes the Swing graphical interface (LibraryGUI)
+gradle test           # Runs the JUnit 5 test suite (LibraryServiceTest)
+```
+
+**Option 2 — Without Gradle or internet (only requires a JDK 17+):**
+
+```bash
+bash scripts/compile-and-run.sh     # Compiles and runs the Library demo (Main)
+bash scripts/run-console.sh         # Compiles and runs the interactive console menu
+bash scripts/run-gui.sh             # Compiles and runs the Swing graphical interface
+bash scripts/run-simple-tests.sh    # Compiles and runs SimpleLibraryServiceTest (no external deps)
+```
+
+`SimpleLibraryServiceTest` mirrors the same cases as `LibraryServiceTest` (the real JUnit 5
+suite) but is written as a plain `main` method with hand-rolled assertions, so it can be
+compiled and run with nothing but `javac`/`java` — useful for environments (like GitHub
+Codespaces sessions without outbound network) where Gradle cannot resolve the JUnit 5
+dependency.
+
+> Note: `LibraryGUI` needs a graphical desktop (X11/Wayland/Windows/macOS) to open a window.
+> It will fail with a `HeadlessException` on a plain SSH/CI terminal without a display —
+> use `ConsoleMenu` in those environments instead.
+
