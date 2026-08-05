@@ -7,11 +7,10 @@ import com.umb.taller.domain.Loan;
 import com.umb.taller.domain.Member;
 import com.umb.taller.service.LibraryService;
 import com.umb.taller.validation.ValidationExample;
-import com.umb.taller.validation.Validator;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("📚 Bienvenido al Sistema de Biblioteca");
+        System.out.println(" Bienvenido al Sistema de Biblioteca");
 
         try {
             ValidationExample.main(new String[0]);
@@ -38,34 +37,33 @@ public class Main {
 
             LibraryService service = new LibraryService(library);
 
-            System.out.println("📚 Biblioteca: " + library.getName());
-            System.out.println("📖 Libros disponibles: " + library.getAvailableBooks().size());
-            System.out.println("👤 Miembros registrados: " + library.getMembers().size());
+            System.out.println(" Biblioteca: " + library.getName());
+            System.out.println(" Libros disponibles: " + library.getAvailableBooks().size());
+            System.out.println(" Miembros registrados: " + library.getMembers().size());
 
-            System.out.println("\n📖 Libros disponibles:");
+            System.out.println("\n Libros disponibles:");
             library.getAvailableBooks().forEach(book ->
                     System.out.println("  - " + book.getTitle() + " por " + book.getAuthor().getName())
             );
 
-            System.out.println("\n📤 Realizando préstamo con el servicio...");
+            System.out.println("\n Realizando préstamo con el servicio...");
             Loan loan = service.loanBook(book1.getIsbn(), member.getMemberId());
-            System.out.println("✅ Préstamo realizado: " + book1.getTitle());
+            System.out.println(" Préstamo realizado: " + book1.getTitle());
 
-            System.out.println("\n📚 Libros prestados por " + member.getName() + ":");
+            System.out.println("\n Libros prestados por " + member.getName() + ":");
             member.getBorrowedBooks().forEach(book ->
                     System.out.println("  - " + book.getTitle())
             );
 
-            System.out.println("\n📥 Devolviendo libro...");
+            System.out.println("\n Devolviendo libro...");
             library.returnBook(loan);
-            System.out.println("✅ Libro devuelto: " + book1.getTitle());
+            System.out.println(" Libro devuelto: " + book1.getTitle());
 
-            System.out.println("\n📊 Préstamos vencidos: " + library.getOverdueLoans().size());
-            System.out.println("🎯 Sistema funcionando correctamente!");
+            System.out.println("\n Préstamos vencidos: " + library.getOverdueLoans().size());
+            System.out.println(" Sistema funcionando correctamente!");
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println(" Error: " + e.getMessage());
         }
     }
 }
